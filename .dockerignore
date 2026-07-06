@@ -65,6 +65,7 @@ sentinelrecon.log
 results/
 output/
 *.txt
+!requirements.txt
 *.csv
 *.json
 
@@ -111,4 +112,3 @@ docker-compose*
 *.zip
 *.rar
 *.7z
-
