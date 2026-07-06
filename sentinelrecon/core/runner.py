@@ -82,7 +82,7 @@ def run_modules(mod_ids: List[str], api_status: Dict[str, bool], target: str, th
         console=console,
         transient=True,
     ) as prog:
-        task = prog.add_task("run", total=total, module="…")
+        task = prog.add_task("run", total=total, module="...")
         for mid in mod_ids:
             start = time.time()
             tool = tools_mapping.get(mid)
@@ -100,7 +100,10 @@ def run_modules(mod_ids: List[str], api_status: Dict[str, bool], target: str, th
                     runtimes.append((name, sev, time.time() - start))
             prog.advance(task)
     tag = mode_name if mode_name else "multi"
-    generate_report(data, target, [tag])
+    report_modules = [tag]
+    if tag == "CHAIN" and len(data) == 1:
+        report_modules.append(next(iter(data.keys())))
+    generate_report(data, target, report_modules)
     if cli_ctx:
         cli_ctx.last_run_outputs = data
         cli_ctx.last_run_runtimes = runtimes

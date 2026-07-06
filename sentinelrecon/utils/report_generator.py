@@ -28,8 +28,8 @@ def generate_base_filename(domain, modules_used):
     sanitized_domain = re.sub(r'[^a-zA-Z0-9.-]', '_', domain)  # Replace invalid characters with underscores
 
     # Decide the module part of the filename
-    if len(modules_used) == 1:
-        module_part = modules_used[0]
+    clean_modules = [str(m).strip() for m in modules_used if str(m).strip()]
+    module_part = "_".join(clean_modules) if clean_modules else "report"
 
     # Include a timestamp
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')

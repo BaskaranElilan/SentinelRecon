@@ -67,18 +67,21 @@ def shodan_lookup(ip, key):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("target")
+    p.add_argument("legacy_threads", nargs="?", type=int, help=argparse.SUPPRESS)
     p.add_argument("-p", "--ports", default="1-1024")
     p.add_argument("-t", "--threads", type=int, default=100)
     p.add_argument("-T", "--timeout", type=float, default=1.0)
     p.add_argument("--no-fallback", action="store_true")
     args = p.parse_args()
+    if args.legacy_threads is not None and args.threads == 100:
+        args.threads = args.legacy_threads
 
     banner()
     host = clean_domain_input(args.target)
     try:
         ip = socket.gethostbyname(host)
     except:
-        console.print(f"[red]✖ Failed to resolve {host}[/red]")
+        console.print(f"[red]x Failed to resolve {host}[/red]")
         sys.exit(1)
 
     shodan_key = API_KEYS.get("SHODAN_API_KEY","")
@@ -86,7 +89,7 @@ def main():
     use_scan = not args.no_fallback and (not shodan_ports or shodan_key)
     ports = parse_ports(args.ports) if use_scan else sorted(shodan_ports)
 
-    table = Table(title=f"Open Ports – {host} ({ip})", header_style="bold magenta")
+    table = Table(title=f"Open Ports - {host} ({ip})", header_style="bold magenta")
     table.add_column("Port", style="cyan", justify="right")
     table.add_column("Service", style="green")
     table.add_column("Banner", style="white", overflow="fold")
