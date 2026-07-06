@@ -65,6 +65,3 @@ EXPOSE 8080
 
 # Set default command
 ENTRYPOINT ["python", "-m", "sentinelrecon"]
-
-# Default command (can be overridden)
-CMD ["--help"]
